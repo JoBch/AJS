@@ -18,11 +18,11 @@ const SignUp = () => {
         department = event.target.value;
     }
 
-    function handleEmail(event) {
+    function handleEmail(event){
         email = event.target.value;
     }
 
-    function handlePassword(event) {
+    function handlePassword(event){
         password = event.target.value;
     }
 
@@ -39,23 +39,25 @@ const SignUp = () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             signUpUserInfo();
+            console.log(username + "  " + department);
         } catch (error) {
             setError(error.message);
         }
-    };
+    }
 
     return (
         <div>
             <h2>Sign Up</h2>
             <form onSubmit={handleSignUp}>
-                <input type="email" onChange={(event) => handleEmail(event)} placeholder="Email" required />
-                <input type="password" onChange={(event) => handlePassword(event)} placeholder="Password" required />
-                <input type="text" onChange={(event) => handleUsername(event)} placeholder="Username" />
+                <input type="email" onChange={handleEmail} placeholder="Email" required />
+                <input type="password" onChange={handlePassword} placeholder="Password" required />
+                <input type="text" onChange={handleUsername} placeholder="Username" />
                 <select onChange={handleSelectChange} name="department" id="department">
-                    <option value="">What is you favourite sausage?</option>
+                    <option value="">What is your favorite sausage?</option>
                     <option value="Bratwurst Dept.">Bratwurst</option>
                     <option value="Chorizo Dept.">Chorizo</option>
                     <option value="Falukorv Dept.">Falukorv</option>
+                    <option value="Admin">Admin</option>
                 </select>
                 <button type="submit">Sign Up</button>
             </form>

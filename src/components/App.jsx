@@ -59,15 +59,17 @@ export function App() {
     }
 
     if (user) {
+        const isAdmin = userDepartment === "Admin";
+        const filteredCards = isAdmin ? cards : cards.filter(card => card.department === userDepartment);
+
         return (
             <>
                 <LogoutButton setUser={setUser} setUsername={setUsername} />
-                <CreateAssignment cards={cards} userDepartment={userDepartment} username={username} />
-                {error && <p>{error}</p>}
+                <CreateAssignment cards={cards} userDepartment={userDepartment} isAdmin={isAdmin} username={username} />
                 <div className="container">
-                    <SCRUMColumn title="To Do" cards={cards.filter(card => card.status === "todo")} userDepartment={userDepartment} />
-                    <SCRUMColumn title="In Progress" cards={cards.filter(card => card.status === "assigned")} userDepartment={userDepartment} />
-                    <SCRUMColumn title="Done" cards={cards.filter(card => card.status === "done")} userDepartment={userDepartment} />
+                    <SCRUMColumn title="To Do" cards={filteredCards.filter(card => card.status === "todo")} />
+                    <SCRUMColumn title="In Progress" cards={filteredCards.filter(card => card.status === "assigned")} />
+                    <SCRUMColumn title="Done" cards={filteredCards.filter(card => card.status === "done")} />
                 </div>
             </>
         );
