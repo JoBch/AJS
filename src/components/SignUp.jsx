@@ -18,11 +18,11 @@ const SignUp = () => {
         department = event.target.value;
     }
 
-    function handleEmail(event){
+    function handleEmail(event) {
         email = event.target.value;
     }
 
-    function handlePassword(event){
+    function handlePassword(event) {
         password = event.target.value;
     }
 

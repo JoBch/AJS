@@ -1,20 +1,20 @@
 import { db } from "../utils/FirebaseConfig";
 import { ref, update, remove } from "firebase/database";
+import React, { useState } from "react";
 
-function AssignmentCard({ card }) {
-
+function AssignmentCard({ card, users, userDepartment, isAdmin }) {
     const firebaseRef = "/assignments/";
-    let intputText = "";
+    const [assignedTo, setAssignedTo] = useState("");
 
-    function handleInputChange(event) {
-        intputText = event.target.value
+    function handleAssignedToChange(event) {
+        setAssignedTo(event.target.value);
     }
 
     async function handleSubmit(event, cardId) {
         event.preventDefault();
         await update(ref(db, firebaseRef + cardId), {
             status: "assigned",
-            assignedTo: intputText
+            assignedTo: assignedTo
         });
     }
 
@@ -29,7 +29,9 @@ function AssignmentCard({ card }) {
         event.preventDefault();
         await remove(ref(db, firebaseRef + cardId));
     }
-    //Building my cards based on what their status are, also adding the functionality to move them along the SCRUM-board
+
+    const filteredUsers = isAdmin ? users : users.filter(user => user.department === userDepartment);
+
     return (
         <div className="card">
             <h3>{card.assignment}</h3>
@@ -37,7 +39,12 @@ function AssignmentCard({ card }) {
             <p>Assigned by: {card.assignedBy}</p>
             {card.status === "todo" && (
                 <form onSubmit={(event) => handleSubmit(event, card.id)}>
-                    <input required type="text" id="assignedTo" onChange={handleInputChange} placeholder="Who should do it..." />
+                    <select onChange={handleAssignedToChange} name="assignedTo" id="assignedTo" required>
+                        <option value="">--Select User--</option>
+                        {filteredUsers.map(user => (
+                            <option key={user.id} value={user.username}>{user.username}</option>
+                        ))}
+                    </select>
                     <button type="submit">Assign</button>
                 </form>
             )}

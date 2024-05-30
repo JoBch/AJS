@@ -33,7 +33,7 @@ function CreateAssignment({ userDepartment, isAdmin, username }) {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-            <input onChange={handleInputChange} type="text" id="assignmentText" placeholder="Create Assignment..." />
+                <input onChange={handleInputChange} type="text" id="assignmentText" placeholder="Create Assignment..." />
                 {isAdmin ? (
                     <select onChange={handleSelectChange} name="department" id="department">
                         <option value="">--Please Choose A Department--</option>

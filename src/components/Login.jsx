@@ -29,7 +29,7 @@ function Login() {
         <div>
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
-            <input type="email" onChange={(event) => handleEmail(event)} placeholder="Email" required />
+                <input type="email" onChange={(event) => handleEmail(event)} placeholder="Email" required />
                 <input type="password" onChange={(event) => handlePassword(event)} placeholder="Password" required />
                 <button type="submit">Login</button>
             </form>

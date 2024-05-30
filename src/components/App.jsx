@@ -1,3 +1,5 @@
+//Might have to do a cleanup and move everything down 1 notch, might be too much in this component.
+
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Routes, Route, Link, HashRouter } from "react-router-dom";
@@ -11,17 +13,18 @@ import LogoutButton from './Logout.jsx';
 
 export function App() {
     const [user, setUser] = useState(null);
-    const [username, setUsername] = useState("");
-    const [userDepartment, setUserDepartment] = useState("");
+    const [username, setUsername] = useState(""); //Slå samman med den nedanför kanske?
+    const [userDepartment, setUserDepartment] = useState(""); // const [currentUser, setCurrentUser] = useState({username: blabla, userDepartment: blabla})
     const [cards, setCards] = useState([]);
+    const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUser(user);
-                fetchUser(user.email);
                 fetchAssignment();
+                fetchUsers(user.email);
             } else {
                 setUser(null);
             }
@@ -42,7 +45,7 @@ export function App() {
         });
     }
 
-    function fetchUser(userId) {
+    function fetchUsers(userId) {
         onValue(usersRef, snapshot => {
             const data = snapshot.val();
             if (!data) setError("No data available from Firebase");
@@ -55,6 +58,7 @@ export function App() {
                 setUserDepartment(currentUser.department);
                 setUsername(currentUser.username)
             }
+            setUsers(fetchedUsers);
         });
     }
 
@@ -64,12 +68,14 @@ export function App() {
 
         return (
             <>
+                <h3>Logged in as: {username}</h3>
                 <LogoutButton setUser={setUser} setUsername={setUsername} />
                 <CreateAssignment cards={cards} userDepartment={userDepartment} isAdmin={isAdmin} username={username} />
+                {error && <p>{error}</p>}
                 <div className="container">
-                    <SCRUMColumn title="To Do" cards={filteredCards.filter(card => card.status === "todo")} />
-                    <SCRUMColumn title="In Progress" cards={filteredCards.filter(card => card.status === "assigned")} />
-                    <SCRUMColumn title="Done" cards={filteredCards.filter(card => card.status === "done")} />
+                    <SCRUMColumn title="To Do" cards={filteredCards.filter(card => card.status === "todo")} users={users} userDepartment={userDepartment} isAdmin={isAdmin} />
+                    <SCRUMColumn title="In Progress" cards={filteredCards.filter(card => card.status === "assigned")} users={users} userDepartment={userDepartment} isAdmin={isAdmin} />
+                    <SCRUMColumn title="Done" cards={filteredCards.filter(card => card.status === "done")} users={users} userDepartment={userDepartment} isAdmin={isAdmin} />
                 </div>
             </>
         );
@@ -86,7 +92,7 @@ export function App() {
             <Routes>
                 <Route path="/Login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path='/SCRUM' element={<SCRUMColumn/> }/>
+                <Route path='/SCRUM' element={<SCRUMColumn />} />
             </Routes>
         </HashRouter>
     );
