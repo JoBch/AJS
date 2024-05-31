@@ -13,7 +13,12 @@ import LogoutButton from './Logout.jsx';
 
 export function App() {
     const [user, setUser] = useState(null);
-    const [username, setUsername] = useState(""); //Slå samman med den nedanför kanske?
+    // const [currentUser, setCurrentUser] = useState({
+    //     username: "",
+    //     userDepartment:"", 
+    //     isAdmin: false
+    // })
+    const [username, setUsername] = useState(""); //Slå samman med den nedanför kanske? Och eventuellt isAdmin med?
     const [userDepartment, setUserDepartment] = useState(""); // const [currentUser, setCurrentUser] = useState({username: blabla, userDepartment: blabla})
     const [cards, setCards] = useState([]);
     const [users, setUsers] = useState([]);
@@ -53,16 +58,23 @@ export function App() {
                 id: key,
                 ...data[key]
             }));
-            const currentUser = fetchedUsers.find(user => user.email === userId);
-            if (currentUser) {
-                setUserDepartment(currentUser.department);
-                setUsername(currentUser.username)
+            const loggedinUser = fetchedUsers.find(user => user.email === userId);
+            if (loggedinUser) {
+                setUserDepartment(loggedinUser.department);
+                setUsername(loggedinUser.username)
+                // setCurrentUser({
+                //     ...currentUser,
+                //     username: loggedinUser.username,
+                //     userDepartment: loggedinUser.department
+                // })
             }
             setUsers(fetchedUsers);
         });
     }
 
     if (user) {
+        // if(userDepartment === "Admin") setCurrentUser({...currentUser, isAdmin: true})
+
         const isAdmin = userDepartment === "Admin";
         const filteredCards = isAdmin ? cards : cards.filter(card => card.department === userDepartment);
 
